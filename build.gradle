@@ -1,0 +1,42 @@
+group 'com.apulbere'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.0'
+    }
+}
+
+apply plugin: 'scala'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.apulbere.cygni.Application'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+shadowJar {
+    transform(com.github.jengelman.gradle.plugins.shadow.transformers.AppendingTransformer) {
+        resource = 'reference.conf'
+    }
+    archiveName = "${baseName}-${version}.jar"
+}
+
+dependencies {
+    compile group: 'org.scala-lang', name: 'scala-library', version: '2.12.4'
+    compile group: 'com.typesafe.akka', name: 'akka-http_2.12', version: '10.1.1'
+    compile group: 'com.typesafe.akka', name: 'akka-stream_2.12', version: '2.5.11'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4.1'
+}
