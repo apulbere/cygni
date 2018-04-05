@@ -1,8 +1,12 @@
 # About
 Transfer files over wifi from your computer to your mobile device by scanning a QR code from terminal
 
-## Build and Run
+### Build
 ```
 ./gradlew shadowJar
-java -jar build/libs/cygni-1.0.jar "/path/to/local/file.epub" --ip=XXX.XXX.X.XXX --port=XXXX
+```
+
+### Run
+```
+java -jar cygni-1.1.jar "/path/to/local/file.epub" --ip=XXX.XXX.X.XXX
 ```
