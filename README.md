@@ -1,5 +1,5 @@
 # About
-Transfer files over wifi from your computer to your mobile device
+Transfer files over wifi from your computer to your mobile device by scanning a QR code from terminal
 
 ## Build and Run
 ```

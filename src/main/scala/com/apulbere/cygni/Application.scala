@@ -7,7 +7,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
-import com.apulbere.cygni.util.ParameterResolver
+import com.apulbere.cygni.util.{ParameterResolver, QrCodeGenerator}
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
@@ -33,12 +33,19 @@ object Application {
     val ip = parameterResolver.get("ip").getOrElse("localhost")
     val bindingFuture = Http().bindAndHandle(route, ip, port)
 
-    println(s"http://$ip:$port/")
+    val fileUrl = s"http://$ip:$port/"
+
+    displayInfoToConsole(fileUrl)
     println("Press RETURN to stop...")
 
     StdIn.readLine()
     bindingFuture
       .flatMap(_.unbind())
       .onComplete(_ => system.terminate())
+  }
+
+  def displayInfoToConsole(fileUrl: String): Unit = {
+    println(QrCodeGenerator.from(fileUrl))
+    println(fileUrl)
   }
 }
