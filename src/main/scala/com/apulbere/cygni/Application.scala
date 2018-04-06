@@ -7,7 +7,8 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
-import com.apulbere.cygni.util.{ParameterResolver, QrCodeGenerator}
+import com.apulbere.cygni.model.RequestUrl
+import com.apulbere.cygni.util.{ParameterResolver, QrCodePrinter}
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
@@ -20,23 +21,18 @@ object Application {
   def main(args: Array[String]): Unit = {
     val filePath = args.lift(0).getOrElse(throw new IllegalArgumentException("Path to the file is not provided"))
     val fileName = Paths.get(filePath).getFileName
+    val requestUrl = RequestUrl(ParameterResolver(args))
 
     val route =
-      pathSingleSlash {
+      pathPrefix(requestUrl.prefix) {
         respondWithHeader(RawHeader("Content-Disposition", s"inline; filename=$fileName")) {
           getFromFile(filePath)
         }
       }
 
-    val parameterResolver = ParameterResolver(args)
-    val port = parameterResolver.get("port").map(_.toInt).getOrElse(8080)
-    val ip = parameterResolver.get("ip").getOrElse("localhost")
-    val bindingFuture = Http().bindAndHandle(route, ip, port)
+    val bindingFuture = Http().bindAndHandle(route, requestUrl.ip, requestUrl.port)
 
-    val fileUrl = s"http://$ip:$port/"
-
-    displayInfoToConsole(fileUrl)
-    println("Press RETURN to stop...")
+    displayInfoToConsole(requestUrl)
 
     StdIn.readLine()
     bindingFuture
@@ -44,8 +40,10 @@ object Application {
       .onComplete(_ => system.terminate())
   }
 
-  def displayInfoToConsole(fileUrl: String): Unit = {
-    println(QrCodeGenerator.from(fileUrl))
+  def displayInfoToConsole(requestUrl: RequestUrl): Unit = {
+    val fileUrl = requestUrl.toString
+    QrCodePrinter.print(fileUrl)
     println(fileUrl)
+    println("Press RETURN to stop...")
   }
 }
