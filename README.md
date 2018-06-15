@@ -1,7 +1,7 @@
 # About
 Transfer files over wifi from your computer to your mobile device by scanning a QR code from terminal or cmd
 
-![screenshot](https://drive.google.com/file/d/1HoCxBT2OyOoF8Y95NMS6cVlJ4TAAG6Cb/view?usp=sharing)
+![screenshot](https://static.md/24161156ce5d7cb5bae3ec221a22fb60.png)
 ### Build
 ```
 ./gradlew shadowJar
