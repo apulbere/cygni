@@ -1,6 +1,7 @@
 # About
 Transfer files over wifi from your computer to your mobile device by scanning a QR code from terminal or cmd
-![screenshot](https://www.dropbox.com/s/j2xowjlkmfyzuli/cygni-example.png)
+
+![screenshot](https://drive.google.com/file/d/1HoCxBT2OyOoF8Y95NMS6cVlJ4TAAG6Cb/view?usp=sharing)
 ### Build
 ```
 ./gradlew shadowJar
